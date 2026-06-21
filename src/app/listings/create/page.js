@@ -115,6 +115,13 @@ export default function CreateListingPage() {
 
       const data = await response.json().catch(() => ({}));
 
+      if (response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("type");
+        router.push("/login");
+        return;
+      }
+
       if (response.ok) {
         setSuccessMsg("Auction listing created successfully! Redirecting...");
         setTimeout(() => {

@@ -35,7 +35,18 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (data.error) {
-        setError(data.error);
+        if (data.error.includes("verify your email")) {
+          setError(
+            <span>
+              {data.error}{" "}
+              <Link href={`/verify-otp?username=${encodeURIComponent(form.username)}`} className={styles.footerLink} style={{ textDecoration: 'underline' }}>
+                Verify Now
+              </Link>
+            </span>
+          );
+        } else {
+          setError(data.error);
+        }
       } else if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.username);

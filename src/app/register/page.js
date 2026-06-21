@@ -57,6 +57,11 @@ export default function RegisterPage() {
 
       if (data.err) {
         setError(data.err);
+      } else if (data.msg === "OTP Sent") {
+        setSuccess("OTP sent to your email! Redirecting to verification...");
+        setTimeout(() => {
+          router.push(`/verify-otp?username=${encodeURIComponent(data.username)}`);
+        }, 1500);
       } else {
         setSuccess("Registration successful! Redirecting to login...");
         setTimeout(() => {

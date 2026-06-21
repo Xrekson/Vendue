@@ -45,6 +45,12 @@ export default function ListingDetailsPage({ params: paramsPromise }) {
               Authorization: `Bearer ${token}`,
             },
           });
+          if (bidsRes.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("type");
+            router.push("/login");
+            return;
+          }
           if (bidsRes.ok) {
             const bidsData = await bidsRes.json();
             // Sort bids by timestamp descending
@@ -137,6 +143,11 @@ export default function ListingDetailsPage({ params: paramsPromise }) {
 
     client.onStompError = (frame) => {
       console.error("STOMP broker error:", frame.headers["message"]);
+      if (frame.headers["message"]?.toLowerCase().includes("expired")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("type");
+        router.push("/login");
+      }
     };
 
     client.activate();

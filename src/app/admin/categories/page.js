@@ -71,6 +71,13 @@ export default function AdminCategoriesPage() {
 
       const data = await response.json();
 
+      if (response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("type");
+        router.push("/login");
+        return;
+      }
+
       if (response.ok && data.msg) {
         setSuccessMsg("Category created successfully!");
         setForm({ name: "", details: "" });
@@ -99,6 +106,13 @@ export default function AdminCategoriesPage() {
       });
 
       const data = await response.json();
+
+      if (response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("type");
+        router.push("/login");
+        return;
+      }
 
       if (response.ok && data.msg) {
         setSuccessMsg("Category deleted successfully.");

@@ -41,6 +41,13 @@ export default function AdminLiveAuctionsPage() {
           }),
         ]);
 
+        if (listingsRes.status === 401 || categoriesRes.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("type");
+          router.push("/login");
+          return;
+        }
+
         if (listingsRes.ok && categoriesRes.ok) {
           const listingsData = await listingsRes.json();
           const categoriesData = await categoriesRes.json();
@@ -96,6 +103,11 @@ export default function AdminLiveAuctionsPage() {
 
     client.onStompError = (frame) => {
       console.error("STOMP broker error:", frame.headers["message"]);
+      if (frame.headers["message"]?.toLowerCase().includes("expired")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("type");
+        router.push("/login");
+      }
     };
 
     client.activate();
